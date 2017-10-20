@@ -7,9 +7,10 @@ $(document).ready(function(){
 				htmlOutput += data.error;
 			}
 			else{
-				htmlOutput += '<p>Height: '+data.fees+'</p><p>Hash: '+data.chain+'</p><p>Time: '+data.bits+'</p><p>Fees: '+data.height+' satoshis</p>';
+				htmlOutput += '<td>'+data.chain+'</td><td>'+data.height+'</td><td>'+data.fees+'</td><td>'+data.bits+'</td><td>'+data.time+'</td><td>'+data.depth+'</td><td>'+data.total+'</td>';
 
 			}
 			$(".results").html( htmlOutput );
 			});
 	});
+});
