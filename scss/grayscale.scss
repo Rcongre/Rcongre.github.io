@@ -24,7 +24,7 @@ h4,
 h5,
 h6 {
   font-family: 'Cabin', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-weight: 700;
+  font-weight: 600;
 
   margin: 0 0 35px;
 
@@ -88,7 +88,7 @@ a {
       -moz-transition: background 0.3s ease-in-out;
       transition: background 0.3s ease-in-out;
       &:hover {
-        color: fade(white, 80%);
+        color: fade(white, 60%);
         outline: none;
         background-color: transparent;
       }
