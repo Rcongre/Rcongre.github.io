@@ -197,9 +197,19 @@ a {
   padding-bottom: 150px;
 }
 
-.download-section {
+.explorer-section {
   color: white;
   background: url('../img/downloads-bg.jpg') no-repeat center center scroll;
+  background-color: black;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.contact-section {
+  color: white;
+  background: url('../img/batman.jpg') no-repeat center center scroll;
   background-color: black;
   -webkit-background-size: cover;
   -moz-background-size: cover;

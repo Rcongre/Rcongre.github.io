@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Blockizor - Blockchain Notarisation Service</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Theme CSS -->
+  <link href="css/freelancer.css" rel="stylesheet">
+
+  <!-- Nottario CSS -->
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+  <!-- Custom Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+
+  <!-- Custom fonts for this template -->
+  <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Cabin:700' rel='stylesheet' type='text/css'>
+
+  <!-- Custom styles for this template -->
+  <link href="css/grayscale.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand js-scroll-trigger" href="index.html">Blockchain Project</a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        Menu
+        <i class="fa fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#blockizor">Blockizor</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#contact">Contact</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Intro Header -->
+  <header class="masthead">
+    <div class="intro-body">      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 mx-auto">
+            <h3 class="brand-heading">RegCoin</h3>
+            <p class="intro-text">Here you will be able to get informations about bitcoin, jus t scroll down please.
+              <br>Created by The Reg.</p>
+              <a href="#blockizor" class="btn btn-circle js-scroll-trigger">
+                <i class="fa fa-angle-double-down animated"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div id ="app">
+      <!-- block explorer section-->
+      <section id="blockizor" class="blockizor-section content-section text-center">
+        <header v-if="!upload_visible">>
+          <div class="container" id="maincontent" tabindex="-1">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="intro-text">
+                  <h1 class="name">Blockizor</h1>
+                  <span class="skills">Connectez vous à MetaMask</span>
+                  <p></p>
+                </div>
+                <div>
+                  <button type="button" class="btn btn-default btn-block-top" v-on:click="display_upload">Enregistrer un fichier !</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+        <section id = "upload" v-if="upload_visible" v-cloak>
+         <div class="container">
+           <div class="row">
+             <div class="col-lg-12 text-center">
+               <div v-if="web3Missing">
+                 <p>
+                  Merci d'installer l'extension <a href="https://metamask.io/" target="_blank">Metamask</a> pour Google Chrome ou Firefox pour utiliser Blockizor
+                </p>
+              </div>
+              <div v-if="!web3Missing">
+               <div v-if="!hash">
+                 <h2>Drag and drop a file into the dropzone</h2>
+                 <hr class="star-light">
+               </div> 
+               <div v-bind:class="{ dragging: dragging }" v-if="!hash" id="drop_zone" ondrop="drop_handler(event);" ondragover="allowDrop(event)" ondragleave="dragout(event)">
+                 <strong>Drop Zone ...</strong>
+               </div>
+               <div v-if="hash"> 
+                 <h2>Détails du fichier</h2>
+                 <hr class="star-light">
+                 <table class="table">
+                   <tr><th>Nom</th><td>{{ name }}<span v-if="name.length==32">...</span></td></tr>
+                   <tr><th>Type de fichier</th><td>{{ type }}<span v-if="name.length==32">...</span></td></tr>
+                   <tr><th>Taille</th><td>{{ size }} bytes</td></tr>
+                   <tr><th>Dernière modification</th><td>{{ lastModified }}</td></tr>
+                   <tr><th>Hash</th><td>{{ hash }}</td></tr>
+                 </table>
+               </div>
+               <div class="buttonspace" v-if="!animate">
+                 <button type="button" class="btn btn-primary btn-lg" :disabled="!hash || !name || hash.length!=66" v-on:click="create_contract">Enregistrer</button>
+                 <button type="button" class="btn btn-danger btn-lg"  v-on:click="cancel_upload">Annuler</button>
+               </div>
+             </div>
+             <div v-if="animate">
+               <p v-if="!error"><img src="img/animation.gif" /></p>
+               <p v-if="!error"> Merci d'attendre que le contrat soit stocké dans la blockchain Ethereum. 
+               Cela peut prendre jusqu'à une minute. Lorsque cela sera fait, vous serez redigié vers la page de confirmation.</p> 
+               <p><a v-bind:href="etherscanLink" target="_new">Transaction Blockchain : {{ tx }}</a></p>
+               <p v-if="error">Une erreur est survenue. L'erreur est : "{{ error }}".</p>
+             </div>
+           </div>
+         </div>
+       </div>
+     </section>
+   </section>
+ </div>
+
+      <!-- Contact Section -->
+      <section id="contact" class="contact-section content-section text-center">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-8 mx-auto">
+              <h2>Contact Me</h2>
+              <p>Feel free to leave me a comment on 
+                <a href="https://twitter.com/regis_estuncon?lang=fr">Twitter</a>
+              </p>
+              <ul class="list-inline banner-social-buttons">
+                <li class="list-inline-item">
+                  <a href="https://twitter.com/regis_estuncon?lang=fr" class="btn btn-default btn-lg">
+                    <i class="fa fa-twitter fa-fw"></i>
+                    <span class="network-name">Twitter</span>
+                  </a>
+                </li>
+                <li class="list-inline-item">
+                  <a href="https://github.com/Rcongre" class="btn btn-default btn-lg">
+                    <i class="fa fa-github fa-fw"></i>
+                    <span class="https://github.com/Rcongre">Github</span>
+                  </a>
+                </li>
+                <li class="list-inline-item">
+                  <a href="https://www.linkedin.com/in/regis-congre/" class="btn btn-default btn-lg">
+                    <i class="fa fa-linkedin fa-fw"></i>
+                    <span class="network-name">LinkedIn</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+ <!-- Footer -->
+ <footer>
+  <div class="container text-center">
+    <p>Copyright &copy; My Website 2017</p>
+  </div>
+</footer>
+
+<!-- Bootstrap core JavaScript -->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/popper/popper.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+
+<!-- Custom scripts for this template -->
+<script src="js/grayscale.min.js"></script>
+<script src="js/index.js"></script>
+
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://unpkg.com/vue"></script>
+<script src="js/solidity.js"></script>
+<script src="js/nottario.js"></script>
+</body>
+
+</html>
