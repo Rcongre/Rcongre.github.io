@@ -77,7 +77,7 @@
     <div id ="app">
       <!-- block explorer section-->
       <section id="blockizor" class="blockizor-section content-section text-center">
-        <header v-if="!upload_visible" style="background-color: black">>
+        <header v-if="!upload_visible">>
           <div class="container" id="maincontent" tabindex="-1">
             <div class="row">
               <div class="col-lg-12">
@@ -107,7 +107,7 @@
                  <h2>Drag and drop a file into the dropzone</h2>
                  <hr class="star-light">
                </div> 
-               <div v-bind:class="{ dragging: dragging }" v-if="!hash" id="drop_zone" ondrop="drop_handler(event);" ondragover="allowDrop(event)" ondragleave="dragout(event)">
+               <div v-bind:class="{ dragging: dragging }" v-if="!hash" id="drop_zone" ondrop="drop_handler(event);" ondragover="allowDrop(event)" ondragleave="dragout(event)" style="background-color: white">
                  <strong>Drop Zone ...</strong>
                </div>
                <div v-if="hash"> 
